@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>简易计算器</title>
+    <style>
+        body {
+            background-color: #eee;
+        }
+        #calculator {
+            margin: 100px 0 0 150px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 简易计算器 -->
+<div id="calculator">
+    <p>
+        <input type="text" class="formerInput" value="1" />
+        <span class="sign">+</span>
+        <input type="text" class="laterInput" value="1" />
+        <span>=</span>
+        <br>
+        <span class="resultOutput">2</span>
+    </p>
+    <p>
+        <input type="button" value="+" onclick="addHandler();" />
+        <input type="button" value="-" onclick="subtractHandler();" />
+        <input type="button" value="×" onclick="multiplyHandler();" />
+        <input type="button" value="÷" onclick="divideHandler();" />
+        <input type="button" value="clear" onclick="clearHandler();" />
+    </p>
+</div>
+
+<script>
+    // 获取元素
+    var calculator = document.querySelector('#calculator');
+    var formerInput = calculator.querySelector('.formerInput');
+    var laterInput = calculator.querySelector('.laterInput');
+    var sign = calculator.querySelector('.sign');
+    var resultOutput = calculator.querySelector('.resultOutput');
+
+    var num1;
+    var num2;
+    var finallyArr;
+
+    function addHandler ( ) {
+        sign.innerHTML = '+';
+        if(!checkNum(formerInput.value)){
+            alert("num1 输入不合法！");
+            return;
+        }
+        if(!checkNum(laterInput.value)){
+            alert("num2 输入不合法！");
+            return;
+        }
+        let str1=formerInput.value;
+        let str2=laterInput.value;
+        let result;
+        // 全负
+        if (str1[0]=="-" && str2[0]=="-"){
+            result=add(str1,str2);
+            resultOutput.innerHTML="-"+result.replace(/^0+/, '');
+            console.log("全负");
+        }
+        // 第2个正，第1个负
+        else if (str1[0]=="-" && str2[0]!="-"){
+            str1=str1.slice(1);
+            result=sub(str2,str1);
+            resultOutput.innerHTML=result;
+            console.log("第2个正，第1个负");
+        }
+        // 第1个正，第2个负
+        else if (str2[0]=="-" && str1[0]!="-"){
+            str2=str2.slice(1);
+            result=sub(str1,str2);
+            resultOutput.innerHTML=result;
+            console.log("第1个正，第2个负");
+        }
+        else {
+            result=add(str1,str2);
+            resultOutput.innerHTML=result.replace(/^0+/, '');
+            console.log("全正");
+        }
+    }
+
+    function add(s1,s2) {
+        s1=s1.split("");
+        s2=s2.split("");
+        console.log(s1);
+        let result="";//结果
+        let flag=0;
+        while(s1.length||s2.length||flag){
+            flag+=~~s1.pop()+~~s2.pop();
+            result=flag%10+result;
+            flag=flag>9;
+        }
+        return result;
+    }
+
+    // 减
+    function subtractHandler() {
+        sign.innerHTML = '-';
+        if(!checkNum(formerInput.value)){
+            alert("输入:num1 不合法！");
+            return;
+        }
+        if(!checkNum(laterInput.value)){
+            alert("输入:num2 不合法！");
+            return;
+        }
+        let str1=formerInput.value;
+        let str2=laterInput.value;
+        let result;
+        if (str1[0]=="-" && str2[0]=="-"){
+            str1=str1.slice(1);
+            str2=str2.slice(1);
+            result=sub(str2,str1);
+            resultOutput.innerHTML=result;
+            console.log("全负");
+        }
+        // 第2个正，第1个负
+        else if (str1[0]=="-" && str2[0]!="-"){
+            str1=str1.slice(1);
+            result=add(str2,str1);
+            resultOutput.innerHTML="-"+result;
+            console.log("第2个正，第1个负");
+        }
+        // 第1个正，第2个负
+        else if (str2[0]=="-" && str1[0]!="-"){
+            str2=str2.slice(1);
+            result=add(str1,str2);
+            resultOutput.innerHTML=result;
+            console.log("第1个正，第2个负");
+        }
+        else {
+            result=sub(str1,str2);
+            resultOutput.innerHTML=result;
+            console.log("全正");
+        }
+
+    }
+
+    function sub(str1,str2) {
+        let result="";//结果
+        let flag=0;
+        let subplus=0;
+        console.log(str1,str2,typeof (str1))
+        let n1=Number(str1);
+        let n2=Number(str2);
+        console.log(n1,n2);
+        if (n1 < n2){
+            let c=str1;
+            str1=str2;
+            str2=c;
+            console.log(str1,str2)
+            subplus=1;
+        }
+
+        str1=str1.split("");
+        str2=str2.split("");
+
+        let a=str1;
+        let b=str2;
+        let c=0;
+        while (a.length) {
+            var num1 = ~~a.pop();
+            var num2 = ~~b.pop();
+            num2=num2+c
+            if (num1 >= num2){
+                c = num1 - num2;
+                result = c + result;
+                c = false;
+            }else {
+                c = num1 + 10 - num2;
+                result = c + result;
+                c = true
+            }
+            //判断最高位有无借位，若有借位，则说明结果为负数
+            if (a.length === 0 && c){
+                result = '-' + result
+            }
+        }
+        result = result.replace(/^0+/,'');
+        //判断最后的结果是否为0
+        if (result === ''){
+            result = 0;
+        }
+
+        // if(subplus==1) result="-"+result.replace(/^0/,'').replace(/-/g,'');
+        // else result=result.replace(/^0/,'').replace(/-/g,'');
+
+        if(subplus==1) result="-"+result;
+        else result=result;
+
+        return result;
+    }
+
+    // 乘
+    function multiplyHandler() {
+        finallyArr = new Array();
+        sign.innerHTML = '×';
+        if(!checkNum(formerInput.value)){
+            alert("输入:num1 不合法！");
+            return;
+        }
+        if(!checkNum(laterInput.value)){
+            alert("输入:num2 不合法！");
+            return;
+        }
+        num1 = formerInput.value;
+        num2 = laterInput.value;
+        console.log(num1,num2)
+
+        //特殊情况的简单算法
+        if(doSimpleWay()){
+            return;
+        }
+        //获取最终值的正负符号
+        var symbol = initSymbol();
+
+        //将输入的值分成4位一小截的数组
+        var numArr1 = getNumArr(num1,new Array());
+        var numArr2 = getNumArr(num2,new Array());
+
+        //遍历相乘相加得到最终的数组
+        for(var i = 0; i < numArr1.length; i++){
+            for(var j = 0; j < numArr2.length; j++){
+                updateFinallyArr(i + j , numArr1[i] * numArr2[j]);
+            }
+        }
+        //倒序遍历数组获取最终结果
+        var resultStr = finallyArr.pop();
+        for(var i = finallyArr.length; i >= 0; i--){
+            if(finallyArr[i] >= 1000){
+                resultStr +=  "" + finallyArr[i];
+            }else if(finallyArr[i] < 1000){
+                resultStr += "0" + finallyArr[i];
+            }else if(finallyArr[i] < 100){
+                resultStr += "00" + finallyArr[i];
+            }else if(finallyArr[i] < 10){
+                resultStr += "000" + finallyArr[i];
+            }else if(finallyArr[i] == 0){
+                resultStr += "0000";
+            }
+        }
+        // resultOutput.innerHTML = symbol + resultStr;
+        console.log(typeof (symbol + resultStr))
+        calculator.querySelector('.resultOutput').innerText = symbol + resultStr;
+        // calculator.querySelector('.resultOutput')
+    }
+
+    function updateFinallyArr(i , num){
+        var old = finallyArr[i];
+        if(old){
+            num = num + old;
+        }
+        if(num > 9999){
+            finallyArr[i] = num % 10000;
+            updateFinallyArr(i + 1 , Math.floor(num/10000) );
+        }else{
+            finallyArr[i] = num;
+        }
+
+    }
+
+    /**
+     * 处理输入字符串的正负号，并判断最终值的正负号
+     */
+    function initSymbol(){
+        if(num1.substring(0,1) == "-"){
+            num1 = num1.substring(1,num1.length);
+            if(num2.substring(0,1) == "-"){
+                num2 = num2.substring(1,num2.length);
+            }else if(num2.substring(0,1) == "+"){
+                num2 = num2.substring(1,num2.length);
+                return "-";
+            }else{
+                return "-";
+            }
+        }else if(num1.substring(0,1) == "+"){
+            num1 = num1.substring(1,num1.length);
+            if(num2.substring(0,1) == "-"){
+                num2 = num2.substring(1,num2.length);
+                return "-";
+            }else if(num2.substring(0,1) == "+"){
+                num2 = num2.substring(1,num2.length);
+            }
+        }
+        return "";
+    }
+
+    /**
+     * 特殊情况的简单算法
+     */
+    function doSimpleWay(){
+        if(num1 == "0" || num2 == "0"){
+            resultOutput.innerHTML = "0";
+            return true;
+        }else if(num1 == "1" || num1 == "+1"){
+            resultOutput.innerHTML = num2;
+            return true;
+        }else if(num2 == "1" || num2 == "+1"){
+            resultOutput.innerHTML = num1;
+            return true;
+        }else if(num1 == "-1"){
+            if(num2.substring(0,1) == "-" ){
+                resultOutput.innerHTML = num2.substring(1,num2.length);
+            }else if(num2.substring(0,1) == "+" ){
+                resultOutput.innerHTML = "-" + num2.substring(1,num2.length);
+            }else{
+                resultOutput.innerHTML = "-" + num2;
+            }
+            return true;
+        }else if(num2 == "-1"){
+            if(num1.substring(0,1) == "-" ){
+                resultOutput.innerHTML = num1.substring(1,num1.length);
+            }else if(num1.substring(0,1) == "+" ){
+                resultOutput.innerHTML = "-" + num1.substring(1,num1.length);
+            }else{
+                resultOutput.innerHTML = "-" + num1;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取4位一小截的数组
+     */
+    function getNumArr(num,arr){
+        var len = num.length;
+        if(len > 4){
+            arr.push(num.substring(len-4,len) * 1);
+            num = num.substring(0,len-4);
+            return getNumArr(num,arr);
+        }else{
+            arr.push(num * 1);
+            return arr;
+        }
+    }
+
+
+    // 除
+    function divideHandler() {
+        sign.innerHTML = '÷';
+        if(!checkNum(formerInput.value)){
+            alert("输入:num1 不合法！");
+            return;
+        }
+        if(!checkNum(laterInput.value)){
+            alert("输入:num2 不合法！");
+            return;
+        }
+
+        let a=formerInput.value;
+        let b=laterInput.value;
+        let result;
+
+        if (a[0]=="-" && b[0]=="-"){
+            a=a.slice(1);
+            b=b.slice(1);
+            result=div(a,b);
+            resultOutput.innerHTML=result;
+        }
+        // 第2个正，第1个负
+        else if (a[0]=="-" && b[0]=="-"){
+            a=a.slice(1);
+            result=div(a,b);
+            resultOutput.innerHTML=result;
+        }
+        // 第1个正，第2个负
+        else if (a[0]=="-" && b[0]=="-"){
+            b=b.slice(1);
+            result=div(a,b);
+            resultOutput.innerHTML=result;
+        }
+        else {
+            result=div(a,b);
+            resultOutput.innerHTML=result;
+        }
+
+
+    }
+
+    function  div(a,b) {
+
+        var alen=a.length,blen=b.length;
+        var quotient=0,remainder=0;
+        var result=[],temp=0 ;
+        for(var i=0;i<alen;i++){
+            temp=remainder*10+parseInt(a[i]);
+            if(temp<b){
+                remainder=temp;
+                result.push(0);
+            }else{
+                quotient=parseInt(temp/b);
+                remainder=temp%b;
+                result.push(quotient);
+            }
+
+        }
+        result= result.join("").replace(/\b(0+)/gi,""),remainder;
+        return result;
+    }
+
+    function  clearHandler() {
+        resultOutput.innerHTML = "";
+        formerInput.value ="";
+        laterInput.value ="";
+    }
+
+    function checkNum(num){
+        if(!num){
+            return false;
+        }
+        var str = num.replace(/[0-9]/g,"");
+        if(str == "" || (str == "-" && num.substring(0,1) =="-" && num.length > 1)
+            || (str == "+" && num.substring(0,1) =="+" && num.length > 1) ){
+            if(num.length > 1000){
+                return false;
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+</script>
+</body>
+</html>
