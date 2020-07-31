@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Rochester" rel="stylesheet">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-color: rgb(247,247,247);
+            height: 80%;
+            width: 100%;
+            position: absolute;
+            overflow-y:auto;
+            overflow-x: hidden;
+        }
+
+        .title{
+            margin: 40px auto 0;
+            text-align: center;
+            font-family:  'Rochester', cursive;
+            font-size:3em;
+            color: rgba(125,204,249,0.34);
+        }
+
+        .content{
+            height: 100%;
+            width: 100%;
+        }
+
+        .mainDiv{
+            height: 100%;
+            width: 100%;
+        }
+
+        .search-before{
+            position: relative;
+            top: 35%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .getRandom{
+            font-size: 1.8em;
+            display: inline;
+            font-family:  'Rochester', cursive;
+        }
+        .getRandom:link{
+            color: rgba(226,70,55,0.34);
+            text-decoration: none;
+        }
+
+        .getRandom:visited{
+            color: rgba(0,238,52,0.27);
+            text-decoration: none;
+        }
+
+        .getRandom:hover{
+            color: #f0a986;
+            text-decoration: none;
+        }
+
+        .getRandom:active{
+            color:#f0a986;
+            text-decoration: none;
+        }
+
+        .search-ico{
+            margin-top: 0.8em;
+            width: 1.8em;
+        }
+
+        .search-title{
+            width: 16em;
+            outline: none;
+            padding: 10px 3em 10px 20px;
+            border-radius: 30px;
+            border-color: #f0a986;
+            font-size: 1.2em;
+            border-style: solid;
+            display: inline;
+            background-color: rgba(246,246,246,1);
+        }
+
+        .search-clear{
+            position: relative;
+            margin-left: -3em;
+            bottom: -4px;
+        }
+
+        .clear-ico{
+            display: none;
+            width: 1.5em;
+        }
+
+        .search-text{
+            margin-top: 1.2em;
+            display: inline;
+            display: none;
+        }
+
+        .itro{
+            margin-top: 0.8em;
+            color: #f0a986;
+            font-size: 1.2em;
+        }
+
+        .searching{
+            position: relative;
+            display: none;
+            margin-left: 10%;
+            margin-right: 10%;
+            width: 80%;
+        }
+
+        .search-li{
+            list-style: none;
+            background-color: rgba(141,236,238,0.27);
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border-left: solid 5px #eeeeee;
+            border-radius: 10px;
+        }
+
+        .search-h3{
+            color: rgba(255,134,111,0.78);
+        }
+
+        .search-abs{
+            color: rgba(28,143,255,0.78);
+            font-size: 1.2em;
+        }
+
+        .search-time{
+            color: rgba(255,150,105,0.78);
+        }
+
+        .search-link:link{
+            text-decoration: none;
+        }
+        .search-link:visited{
+            text-decoration: none;
+        }
+        .search-link:hover{
+            text-decoration: none;
+
+        }
+        .search-link:active{
+            text-decoration: none;
+        }
+
+        .search-li:hover{
+            border-left: solid 5px #f0a986;
+            height: 120px;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="title">
+    Wiki
+</div>
+
+<div class="content">
+    <div class="mainDiv container-fluid">
+        <div class="search-before">
+            <a class="getRandom" target="_blank" href="https://en.wikipedia.org/wiki/Special:Random">Lucky Wiki!</a>
+            <br>
+            <a href="#" class="search-img-a"><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1596082756512&di=df3361162965f4ae3bbd4be4d3a4c97d&imgtype=0&src=http%3A%2F%2Fpic.51yuansu.com%2Fpic3%2Fcover%2F03%2F05%2F85%2F5b29936216a36_610.jpg" class="search-ico" alt="search"></a>
+            <div class="search-text">
+                <label>
+                    <input type="text" name="search-title" class="search-title">
+                </label>
+                <a  href="#" class="search-clear"><img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2790296620,3678494228&fm=26&gp=0.jpg" class="clear-ico" alt="cancel"></a>
+            </div>
+            <p class="itro">Click the icon to search</p>
+        </div>
+        <div class="searching">
+            <ul class="search-ul">
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src='https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js'></script>
+<script>
+    var isSearch = false;
+    $(document).ready(function(){
+
+        //当点击搜索图标时，变成搜索框
+        $(".search-img-a").on("click",function(){
+            $(".search-img-a").css("display","none");
+            $(".search-text").fadeIn(400);
+            $(".search-title").focus();
+            $(".clear-ico").fadeIn(150);
+        });
+
+        //点击关闭按钮就恢复到原来的样子
+        $(".clear-ico").on("click",function(){
+            if(!isSearch){
+                //如果不是搜索状态
+                $(".search-title").val("");
+                $(".search-text").fadeOut(600,function(){
+                    $(".search-img-a").fadeIn(800);
+                });
+            }
+            else if(isSearch){
+                isSearch = false;
+                //先恢复原状
+                $(".search-ul").html("");
+                $(".title").css("position","relative");
+                $(".title").animate({left:'0'},500);
+                $(".search-before").animate({top:"35%"},500,function(){
+                    $(".itro").fadeIn(300);
+                    $(".search-title").val("");
+                    $(".search-text").fadeOut(200,function(){
+                        $(".search-img-a").fadeIn(400);
+                    });
+                });
+            }
+        });
+
+        //监听输入框回车事件
+        $(".search-title").keydown(function(event){
+            if(event.keyCode == 13){
+                var keyword = $(".search-title").val();
+
+                if(keyword == ""){
+                    //如果没有输入
+                    $(".title").css("position","relative");
+                    $(".title").animate({left:'-40%'},500);
+
+                    $(".search-before").animate({top:"-40px"},500,function(){
+                        $(".searching").fadeIn(200);
+                    });
+                    $(".itro").css("display","none");
+                    isSearch = true;
+                    $(".search-ul").html("");
+                    return;
+                }
+
+                //alert("got it");
+                if(!isSearch){
+                    $(".title").css("position","relative");
+                    $(".title").animate({left:'-40%'},500);
+
+                    $(".search-before").animate({top:"-40px"},500,function(){
+                        $(".searching").fadeIn(200);
+                    });
+                    $(".itro").css("display","none");
+                    isSearch = true;
+
+                    //开始从wiki获取搜索到的东西了
+                    getFromWiki(keyword);
+                }else if(isSearch){
+                    getFromWiki(keyword);
+                }
+            }
+        });
+
+        var getFromWiki = function(keyword){
+            $.ajax({
+                url: "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + keyword + "&prop=info&inprop=url&utf8=&format=json",
+                dataType:"jsonp",
+                success:function(response){
+                    //console.log(response);
+                    showResults(response,keyword);
+                },
+                error:function(){
+                    alert("Sorry,there's something wrong within the search,please refresh this page and try again!");
+                }
+            });
+        }
+
+        var showResults = function(response,keyword){
+            console.log(response);
+            //console.log(response.query.search.length);
+            $(".search-ul").html("");
+
+            if(response.query.search.length == 0){
+                //没搜到
+                var str = '<a class="search-link" href="#">';
+                str+='<li class="search-li"><h3 class="search-h3">^_^</h3>';
+                str+='<p class="search-abs">Sorry,the word "'+keyword+'" is not existed in wiki\'s database</p></li></a>';
+                var dot = $(str);
+                $(".search-ul").append(dot);
+                return;
+            }
+
+            for(var i=0; i < response.query.search.length;i++){
+                var str = '<a class="search-link" href="https://en.wikipedia.org/wiki/'+response.query.search[i].title+'" target="_blank">';
+                str+='<li class="search-li"><h3 class="search-h3">'+response.query.search[i].title+'</h3>';
+                str+='<p class="search-abs">'+response.query.search[i].snippet+'</p>';
+                str+='<p class="search-time">'+response.query.search[i].timestamp+'</p></li></a>';
+                var dot = $(str);
+                $(".search-ul").append(dot);
+            }
+        }
+    });
+</script>
+</body>
+</html>
