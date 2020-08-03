@@ -6,4 +6,5 @@ https://learn.freecodecamp.one/coding-interview-prep/take-home-projects/build-a-
 需求：我可以点击一个按钮来查看一条随机的维基百科条目。  
 提示 1：你可以通过右边的链接获取维基百科的随机文章：https://en.wikipedia.org/wiki/Special:Random.  
 提示 2：你可以通过右边的链接来使用维基百科的 API： https://www.mediawiki.org/wiki/API:Main_page.  
-提示 3：使用这个链接来测试维基百科的 API。  
+提示 3：使用这个链接来测试维基百科的 API。    
+background.html 实现了动态线条背景
